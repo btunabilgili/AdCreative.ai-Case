@@ -1,0 +1,24 @@
+﻿Weaknesses of the Distributed Locking Solution
+
+1. Single Point of Failure:
+   - Redis: If the Redis server goes down, the distributed locking mechanism will fail, preventing the application from saving new items. This can be mitigated by using a Redis cluster with replication and failover mechanisms.
+
+2. Latency:
+   - Network Latency: Acquiring and releasing locks over the network introduces latency. This can impact the performance of the application, especially under high load.
+   - Lock Expiry: The expiry time for locks must be carefully chosen. If it is too short, the lock might expire before the operation is completed, leading to potential duplicates. If it is too long, it can reduce the concurrency.
+
+3. Complexity:
+   - Implementation Complexity: Implementing distributed locks adds complexity to the system, requiring additional infrastructure and handling edge cases where locks might not be released properly, leading to potential deadlocks or resource contention.
+   - Error Handling: Ensuring that locks are always released properly in case of failures or exceptions requires robust error handling mechanisms.
+
+4. Scalability:
+   - Lock Contention: If multiple instances frequently attempt to lock the same resource, it can lead to lock contention, reducing the scalability of the system.
+   - Resource Utilization: Managing a large number of locks can increase the resource utilization of the Redis server, potentially impacting its performance.
+
+5. Consistency Guarantees:
+   - Eventual Consistency: Distributed systems often rely on eventual consistency. There might be short periods where different instances have a different view of the system state, leading to potential conflicts.
+   - Split-Brain Scenarios: In case of network partitions, different parts of the system might make conflicting decisions, leading to potential data inconsistencies.
+
+6. Operational Overhead:
+   - Maintenance: Operating and maintaining a distributed locking infrastructure requires additional effort, including monitoring, scaling, and handling failures.
+   - Configuration: Proper configuration of the distributed lock settings (e.g., expiry times, retry intervals) is crucial to ensure optimal performance and reliability.
